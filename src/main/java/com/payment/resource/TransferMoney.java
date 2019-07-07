@@ -20,6 +20,6 @@ public class TransferMoney {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getIt(@DefaultValue("0") @QueryParam("from") Long from, @DefaultValue("0") @QueryParam("to") Long to,
 			@DefaultValue("0.0") @QueryParam("amount") Double amount) {
-		return service.getMessage();
+		return service.transferMoney(from, to, amount);
 	}
 }
