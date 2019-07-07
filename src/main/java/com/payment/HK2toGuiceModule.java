@@ -4,7 +4,7 @@ import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
 import com.google.inject.Injector;
-import com.payment.service.SimpleService;;
+import com.payment.service.TransferService;;
 
 public class HK2toGuiceModule extends AbstractBinder {
 	
@@ -18,7 +18,7 @@ public class HK2toGuiceModule extends AbstractBinder {
 
 	@Override
 	protected void configure() {
-		bindFactory(new ServiceFactory<SimpleService>(guiceInjector, SimpleService.class)).to(SimpleService.class);
+		bindFactory(new ServiceFactory<TransferService>(guiceInjector, TransferService.class)).to(TransferService.class);
 	}
 	
 	

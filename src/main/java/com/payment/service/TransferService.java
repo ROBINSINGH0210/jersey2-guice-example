@@ -1,6 +1,6 @@
 package com.payment.service;
 
-public interface SimpleService {
+public interface TransferService {
 	
 	String getMessage();
 
