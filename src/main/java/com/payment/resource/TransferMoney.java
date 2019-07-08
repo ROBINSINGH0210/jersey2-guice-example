@@ -18,7 +18,7 @@ public class TransferMoney {
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getIt(@DefaultValue("0") @QueryParam("from") Long from, @DefaultValue("0") @QueryParam("to") Long to,
+	public String getIt(@DefaultValue("0") @QueryParam("from") Integer from, @DefaultValue("0") @QueryParam("to") Integer to,
 			@DefaultValue("0.0") @QueryParam("amount") Double amount) {
 		return service.transferMoney(from, to, amount);
 	}

@@ -2,6 +2,6 @@ package com.payment.service;
 
 public interface TransferService {
 	
-	String transferMoney(Long from, Long to, Double amount);
+	String transferMoney(Integer from, Integer to, Double amount);
 
 }

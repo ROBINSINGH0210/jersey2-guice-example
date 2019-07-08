@@ -18,10 +18,9 @@ import lombok.ToString;
 @Table(name="account")
 public class Account {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@Column
-	private Long accountNumber;
-	@Column
+	@Column(name = "accountnumber")
+	private Integer accountNumber;
+	@Column(name = "currentbalance")
 	private Double currentBalance;
 }
