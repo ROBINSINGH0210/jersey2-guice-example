@@ -2,4 +2,4 @@
 
 `mvn clean package jetty:run`
 
-for testing: `curl http://localhost:8080/resource`
+for testing: `http://localhost:8080/transfer?from=0&to=10001&amount=0`
