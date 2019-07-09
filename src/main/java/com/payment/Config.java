@@ -17,7 +17,7 @@ public class Config extends ResourceConfig {
 
 	@Inject
 	public Config(ServiceLocator serviceLocator) {
-		packages("com.payment.resource");
+		packages("com.payment.controller");
 		Injector injector = Guice.createInjector(new GuiceModule());
 		initGuiceIntoHK2Bridge(serviceLocator, injector);
 	}

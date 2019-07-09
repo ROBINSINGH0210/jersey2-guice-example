@@ -3,7 +3,7 @@ package com.payment.dao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.payment.entity.Account;
 
-public interface ProductRepository extends JpaRepository<Account, Long> {
+public interface AccountRepository extends JpaRepository<Account, Long> {
 
     /** You can define JPA queries **/
 //    @Query("select p from Product p where p.name = :name")

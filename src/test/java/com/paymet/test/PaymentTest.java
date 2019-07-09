@@ -1,5 +1,6 @@
 package com.paymet.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,21 +9,23 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Stage;
 import com.payment.GuiceModule;
-import com.payment.dao.ProductRepository;
+import com.payment.dao.AccountRepository;
+import com.payment.entity.Account;
+import com.payment.enums.TransferResponse;
 import com.payment.service.TransferService;
 import com.payment.service.impl.TransferServiceImpl;
 
 public class PaymentTest {
 	private static final String TEST_PERSISTENCE_UNIT_NAME = "testDB";
-	private static final String REPOSITORIES_BASE_PACKAGE_NAME = ProductRepository.class.getPackage().getName();
+	private static final String REPOSITORIES_BASE_PACKAGE_NAME = AccountRepository.class.getPackage().getName();
 
 	private TransferService service;
-	private ProductRepository productRepository;
+	private AccountRepository accountRepository;
 
 	public PaymentTest() {
 		Injector injector = createInjector();
 		service = injector.getInstance(TransferService.class);
-		productRepository = injector.getInstance(ProductRepository.class);
+		accountRepository = injector.getInstance(AccountRepository.class);
 	}
 
 	private static Injector createInjector() {
@@ -32,55 +35,52 @@ public class PaymentTest {
 
 	@Before
 	public void clear() {
-		productRepository.deleteAll();
+		accountRepository.deleteAll();
+		accountRepository.save(new Account(10000, 10.0));
+		accountRepository.save(new Account(10001, 5.0));
+		accountRepository.save(new Account(10002, 7.0));
 	}
 
+	//Response should not be null
 	@Test
 	public void testAdd() {
-		String transferMoney = service.transferMoney(10000, 10001, 10.0d);
-		// service.add(new Account(2l, "Dijon Mustarde"));
+		TransferResponse transferMoney = service.transferMoney(10001, 10002, 1.0d);
 		System.out.println(transferMoney);
 		assertNotNull(transferMoney);
 
 	}
+	
+	@Test
+	public void testSuccessful() {
+		TransferResponse resp = service.transferMoney(10001, 10002, 1.0d);
+		System.out.println(resp);
+		assertEquals(TransferResponse.SUCCESS, resp);
 
-	// @Test
-	// public void testFilter() {
-	// service.add(new Product(1l, "Apple"));
-	// service.add(new Product(2l, "Strawberry"));
-	// service.add(new Product(3l, "Blue Berry"));
-	// service.add(new Product(4l, "Lemon"));
-	//
-	// List<Product> filteredProducts = service.filter("berry");
-	// assertTrue(filteredProducts.size() == 2);
-	// assertTrue(filteredProducts.get(0).getId() == 2l);
-	// assertTrue(filteredProducts.get(1).getId() == 3l);
-	// }
-	//
-	// @Test
-	// public void testAddAll() {
-	// service
-	// .addAll(Arrays.asList(new Product(1l, "Book"), new Product(2l, "Towel"), new
-	// Product(3l, "Chair")));
-	//
-	// assertNotNull(service.get(1l));
-	// assertNotNull(service.get(2l));
-	// assertNotNull(service.get(3l));
-	//
-	// }
-	//
-	// @Test
-	// public void testAddAllRollback() {
-	// try {
-	// service
-	// .addAll(Arrays.asList(new Product(1l, "Bear"), new Product(2l, "Cat"), new
-	// Product(1l, "Tiger")));
-	// fail("Expected exception for id duplication");
-	// } catch (RuntimeException e) {
-	// // Expected rollback done
-	// assertNull(service.get(1l));
-	// assertNull(service.get(2l));
-	// }
-	// }
+	}
+	
+	@Test
+	public void testAccountNotPresent() {
+		TransferResponse resp = service.transferMoney(10, 10002, 1.0d);
+		System.out.println(resp);
+		assertEquals(TransferResponse.ACCOUNT_INVALID, resp);
+
+	}
+	
+	@Test
+	public void testInvalidAccount() {
+		TransferResponse resp = service.transferMoney(-100, 10002, 1.0d);
+		System.out.println(resp);
+		assertEquals(TransferResponse.ACCOUNT_INVALID, resp);
+
+	}
+	
+	
+	@Test
+	public void testInsufficientFund() {
+		TransferResponse resp = service.transferMoney(10001, 10002, 100.0d);
+		System.out.println(resp);
+		assertEquals(TransferResponse.INSUFFICIENT_FUND, resp);
+
+	}
 
 }
